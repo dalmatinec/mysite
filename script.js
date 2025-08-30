@@ -40,6 +40,10 @@ starsCtl.forEach(btn => {
     currentRating = Number(btn.dataset.star);
     starsCtl.forEach(b => b.classList.toggle('active', Number(b.dataset.star) <= currentRating));
   });
+  btn.addEventListener('touchend', () => { // Фикс для мобильных
+    currentRating = Number(btn.dataset.star);
+    starsCtl.forEach(b => b.classList.toggle('active', Number(b.dataset.star) <= currentRating));
+  });
 });
 
 const reviews = [
@@ -100,6 +104,8 @@ function updateSlider() {
 
 prevBtn.addEventListener('click', () => { index = Math.max(0, index - 1); updateSlider(); });
 nextBtn.addEventListener('click', () => { index = index + 1; updateSlider(); });
+prevBtn.addEventListener('touchend', () => { index = Math.max(0, index - 1); updateSlider(); }); // Фикс для мобильных
+nextBtn.addEventListener('touchend', () => { index = index + 1; updateSlider(); }); // Фикс для мобильных
 window.addEventListener('resize', updateReviews);
 
 function updateReviews() {
@@ -115,13 +121,27 @@ const navLinks = document.querySelector('.nav-links');
 menuToggle.addEventListener('click', () => {
   navLinks.classList.toggle('active');
 });
+menuToggle.addEventListener('touchend', () => { // Фикс для мобильных
+  navLinks.classList.toggle('active');
+});
 
 // Закрытие меню при клике на ссылку или вне меню
 document.addEventListener('click', (e) => {
   if (e.target.closest('.nav-links a')) {
     navLinks.classList.remove('active');
   }
-  
+
+  if (navLinks.classList.contains('active') && 
+      !e.target.closest('.nav-links') && 
+      !e.target.closest('.menu-toggle')) {
+    navLinks.classList.remove('active');
+  }
+});
+document.addEventListener('touchend', (e) => { // Фикс для мобильных
+  if (e.target.closest('.nav-links a')) {
+    navLinks.classList.remove('active');
+  }
+
   if (navLinks.classList.contains('active') && 
       !e.target.closest('.nav-links') && 
       !e.target.closest('.menu-toggle')) {
@@ -145,4 +165,29 @@ if (backToTop) {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+    backToTop.addEventListener('touchend', (e) => { // Фикс для мобильных
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 }
+
+// Дополнительный фикс для всех кнопок и ссылок на мобильных (удаляет задержку и обеспечивает клики)
+document.querySelectorAll('a.btn, .btn-primary, button[type="submit"]').forEach(element => {
+  element.addEventListener('touchend', (e) => {
+    if (element.tagName === 'A') {
+      const href = element.getAttribute('href');
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        window.open(href, element.getAttribute('target') || '_self');
+      }
+    } else if (element.type === 'submit') {
+      form.dispatchEvent(new Event('submit'));
+    }
+  });
+});

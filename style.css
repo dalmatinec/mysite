@@ -203,23 +203,6 @@ body {
   100% { transform: scale(1); }
 }
 
-/* Задержка после клика */
-.btn:active {
-  pointer-events: none; /* Блокируем клики */
-  animation: none; /* Останавливаем пульсацию */
-}
-.btn:active::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  animation: clickDelay 1.2s forwards;
-}
-@keyframes clickDelay {
-  0% { opacity: 0.6; }
-  100% { opacity: 0; pointer-events: auto; }
-}
-
 /* Сетки и карточки */
 .grid {
   display: grid;

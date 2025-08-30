@@ -40,7 +40,7 @@ starsCtl.forEach(btn => {
     currentRating = Number(btn.dataset.star);
     starsCtl.forEach(b => b.classList.toggle('active', Number(b.dataset.star) <= currentRating));
   });
-  btn.addEventListener('touchend', () => { // Фикс для мобильных
+  btn.addEventListener('touchend', () => {
     currentRating = Number(btn.dataset.star);
     starsCtl.forEach(b => b.classList.toggle('active', Number(b.dataset.star) <= currentRating));
   });
@@ -51,9 +51,8 @@ const reviews = [
   { name: "Дамир", text: "Подключил домен и всё развернул на VPS. Без лишних слов — работает.", rating: 5 },
 ];
 
-// ФИКС: preventDefault ТОЛЬКО для формы отзывов (остальные кнопки работают)
 form.addEventListener('submit', (e) => {
-  e.preventDefault(); // Блокирует ТОЛЬКО форму отзывов
+  e.preventDefault();
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
   if (!name || !text) return;
@@ -104,8 +103,8 @@ function updateSlider() {
 
 prevBtn.addEventListener('click', () => { index = Math.max(0, index - 1); updateSlider(); });
 nextBtn.addEventListener('click', () => { index = index + 1; updateSlider(); });
-prevBtn.addEventListener('touchend', () => { index = Math.max(0, index - 1); updateSlider(); }); // Фикс для мобильных
-nextBtn.addEventListener('touchend', () => { index = index + 1; updateSlider(); }); // Фикс для мобильных
+prevBtn.addEventListener('touchend', () => { index = Math.max(0, index - 1); updateSlider(); });
+nextBtn.addEventListener('touchend', () => { index = index + 1; updateSlider(); });
 window.addEventListener('resize', updateReviews);
 
 function updateReviews() {
@@ -118,10 +117,12 @@ renderReviews();
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
 
-menuToggle.addEventListener('click', () => {
+menuToggle.addEventListener('click', (e) => {
+  e.stopPropagation(); // Предотвращаем конфликт с глобальным обработчиком
   navLinks.classList.toggle('active');
 });
-menuToggle.addEventListener('touchend', () => { // Фикс для мобильных
+menuToggle.addEventListener('touchend', (e) => {
+  e.stopPropagation(); // То же для тач-событий
   navLinks.classList.toggle('active');
 });
 
@@ -130,18 +131,16 @@ document.addEventListener('click', (e) => {
   if (e.target.closest('.nav-links a')) {
     navLinks.classList.remove('active');
   }
-
   if (navLinks.classList.contains('active') && 
       !e.target.closest('.nav-links') && 
       !e.target.closest('.menu-toggle')) {
     navLinks.classList.remove('active');
   }
 });
-document.addEventListener('touchend', (e) => { // Фикс для мобильных
+document.addEventListener('touchend', (e) => {
   if (e.target.closest('.nav-links a')) {
     navLinks.classList.remove('active');
   }
-
   if (navLinks.classList.contains('active') && 
       !e.target.closest('.nav-links') && 
       !e.target.closest('.menu-toggle')) {
@@ -153,27 +152,28 @@ document.addEventListener('touchend', (e) => { // Фикс для мобильн
 const backToTop = document.querySelector('.back-to-top');
 
 if (backToTop) {
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            backToTop.classList.add('show');
-        } else {
-            backToTop.classList.remove('show');
-        }
-    });
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      backToTop.classList.add('show');
+    } else {
+      backToTop.classList.remove('show');
+    }
+  });
 
-    backToTop.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    backToTop.addEventListener('touchend', (e) => { // Фикс для мобильных
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+  backToTop.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  backToTop.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
 
-// Дополнительный фикс для всех кнопок и ссылок на мобильных (удаляет задержку и обеспечивает клики)
+// Дополнительный фикс для всех кнопок и ссылок на мобильных
 document.querySelectorAll('a.btn, .btn-primary, button[type="submit"]').forEach(element => {
   element.addEventListener('touchend', (e) => {
+    e.stopPropagation(); // Предотвращаем конфликт с другими обработчиками
     if (element.tagName === 'A') {
       const href = element.getAttribute('href');
       if (href.startsWith('#')) {

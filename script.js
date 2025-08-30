@@ -120,18 +120,32 @@ const navLinks = document.querySelector('.nav-links');
 
 menuToggle.addEventListener('touchend', (e) => {
   e.preventDefault();
+  e.stopPropagation();
   navLinks.classList.toggle('active');
 });
 menuToggle.addEventListener('click', (e) => {
   e.preventDefault();
+  e.stopPropagation();
   navLinks.classList.toggle('active');
 });
 
 // Закрытие меню только при клике на ссылку
-document.addEventListener('click', (e) => {
-  if (e.target.closest('.nav-links a')) {
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
     navLinks.classList.remove('active');
-  }
+  });
+  link.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    navLinks.classList.remove('active');
+    const href = link.getAttribute('href');
+    if (href.startsWith('#')) {
+      const targetId = href.substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  });
 });
 
 // Кнопка "Наверх"
@@ -140,7 +154,7 @@ const backToTop = document.querySelector('.back-to-top');
 if (backToTop) {
   window.addEventListener('scroll', () => {
     if (window.scrollY > 300) {
-      backToTop.classList.add('show');
+      backToTop:classList.add('show');
     } else {
       backToTop.classList.remove('show');
     }

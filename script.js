@@ -47,8 +47,9 @@ const reviews = [
   { name: "Дамир", text: "Подключил домен и всё развернул на VPS. Без лишних слов — работает.", rating: 5 },
 ];
 
+// ФИКС: preventDefault ТОЛЬКО для формы отзывов (остальные кнопки работают)
 form.addEventListener('submit', (e) => {
-  e.preventDefault();
+  e.preventDefault(); // Блокирует ТОЛЬКО форму отзывов
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
   if (!name || !text) return;
@@ -110,8 +111,22 @@ renderReviews();
 // Бургер-меню
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
+
 menuToggle.addEventListener('click', () => {
   navLinks.classList.toggle('active');
+});
+
+// Закрытие меню при клике на ссылку или вне меню
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.nav-links a')) {
+    navLinks.classList.remove('active');
+  }
+  
+  if (navLinks.classList.contains('active') && 
+      !e.target.closest('.nav-links') && 
+      !e.target.closest('.menu-toggle')) {
+    navLinks.classList.remove('active');
+  }
 });
 
 // Кнопка "Наверх"
@@ -125,7 +140,7 @@ if (backToTop) {
             backToTop.classList.remove('show');
         }
     });
-    
+
     backToTop.addEventListener('click', (e) => {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });

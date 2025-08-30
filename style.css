@@ -43,6 +43,7 @@ body {
     cursor: pointer;
     font-size: 18px;
     color: #000;
+    touch-action: manipulation; /* Фикс для мобильных кликов */
 }
 .menu-toggle .menu-icon {
     font-size: 24px;
@@ -89,6 +90,7 @@ body {
     padding: 10px;
     border-radius: 12px;
     transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+    touch-action: manipulation; /* Фикс для мобильных кликов */
 }
 .nav-links a i {
     margin-right: 10px;
@@ -152,6 +154,9 @@ body {
   transition: transform var(--trans), box-shadow var(--trans), background var(--trans), color var(--trans);
   font-weight: 700;
   animation: pulse 2s infinite;
+  touch-action: manipulation; /* Фикс для мобильных кликов, убирает 300ms задержку */
+  pointer-events: auto; /* Убедимся, что клики разрешены */
+  z-index: 1; /* Поднимаем над другими элементами */
 }
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), var(--sky));
@@ -215,7 +220,7 @@ body {
 }
 .glass {
   background: var(--glass);
-  backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur)); /* Можно закомментировать, если мешает на мобильном: /* backdrop-filter: blur(var(--blur)); */
   box-shadow: var(--shadow);
   border: 1px solid rgba(255,255,255,0.5);
 }
@@ -296,6 +301,7 @@ body {
   cursor: pointer;
   filter: grayscale(1) opacity(.6);
   transition: filter var(--trans), transform var(--trans);
+  touch-action: manipulation; /* Фикс для мобильных кликов */
 }
 .stars button.active, .stars button:hover {
   filter: none;
@@ -356,6 +362,7 @@ body {
   background: linear-gradient(135deg, var(--accent), var(--sky));
   color: #fff;
   transition: transform var(--trans), opacity var(--trans);
+  touch-action: manipulation; /* Фикс для мобильных кликов */
 }
 .slider .nav:hover {
   transform: translateY(-2px);
@@ -395,6 +402,7 @@ body {
   opacity: 0;
   transition: opacity var(--trans);
   z-index: 1000;
+  touch-action: manipulation; /* Фикс для мобильных кликов */
 }
 .back-to-top.show {
   opacity: 1;

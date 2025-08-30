@@ -118,19 +118,21 @@ renderReviews();
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
 
-menuToggle.addEventListener('touchend', (e) => {
-  e.preventDefault();
-  e.stopPropagation(); // Блокируем глобальный touchend
+function toggleMenu(e) {
+  e.preventDefault(); // Блокируем любые побочные эффекты браузера
   navLinks.classList.toggle('active');
-});
-menuToggle.addEventListener('click', (e) => {
-  e.preventDefault();
-  e.stopPropagation(); // Блокируем глобальный click
-  navLinks.classList.toggle('active');
-});
+}
+
+// Удаляем старые обработчики и добавляем новые с touchstart и touchend
+menuToggle.addEventListener('touchstart', toggleMenu, { passive: false });
+menuToggle.addEventListener('touchend', toggleMenu, { passive: false });
+menuToggle.addEventListener('click', toggleMenu);
 
 // Закрытие меню при клике на ссылку или вне меню
 document.addEventListener('click', (e) => {
+  if (e.target.closest('.nav-links a')) {
+    navLinks.classList.remove('active');
+  }
   if (navLinks.classList.contains('active') && 
       !e.target.closest('.nav-links') && 
       !e.target.closest('.menu-toggle')) {
@@ -138,6 +140,9 @@ document.addEventListener('click', (e) => {
   }
 });
 document.addEventListener('touchend', (e) => {
+  if (e.target.closest('.nav-links a')) {
+    navLinks.classList.remove('active');
+  }
   if (navLinks.classList.contains('active') && 
       !e.target.closest('.nav-links') && 
       !e.target.closest('.menu-toggle')) {

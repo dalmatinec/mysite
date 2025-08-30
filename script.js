@@ -118,15 +118,14 @@ renderReviews();
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
 
-function toggleMenu(e) {
-  e.preventDefault(); // Блокируем любые побочные эффекты браузера
+menuToggle.addEventListener('touchend', (e) => {
+  e.preventDefault();
   navLinks.classList.toggle('active');
-}
-
-// Удаляем старые обработчики и добавляем новые с touchstart и touchend
-menuToggle.addEventListener('touchstart', toggleMenu, { passive: false });
-menuToggle.addEventListener('touchend', toggleMenu, { passive: false });
-menuToggle.addEventListener('click', toggleMenu);
+});
+menuToggle.addEventListener('click', (e) => {
+  e.preventDefault();
+  navLinks.classList.toggle('active');
+});
 
 // Закрытие меню при клике на ссылку или вне меню
 document.addEventListener('click', (e) => {

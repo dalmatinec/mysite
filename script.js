@@ -40,7 +40,8 @@ starsCtl.forEach(btn => {
     currentRating = Number(btn.dataset.star);
     starsCtl.forEach(b => b.classList.toggle('active', Number(b.dataset.star) <= currentRating));
   });
-  btn.addEventListener('touchend', () => {
+  btn.addEventListener('touchend', (e) => {
+    e.preventDefault(); // Предотвращаем дублирование событий
     currentRating = Number(btn.dataset.star);
     starsCtl.forEach(b => b.classList.toggle('active', Number(b.dataset.star) <= currentRating));
   });
@@ -103,8 +104,8 @@ function updateSlider() {
 
 prevBtn.addEventListener('click', () => { index = Math.max(0, index - 1); updateSlider(); });
 nextBtn.addEventListener('click', () => { index = index + 1; updateSlider(); });
-prevBtn.addEventListener('touchend', () => { index = Math.max(0, index - 1); updateSlider(); });
-nextBtn.addEventListener('touchend', () => { index = index + 1; updateSlider(); });
+prevBtn.addEventListener('touchend', (e) => { e.preventDefault(); index = Math.max(0, index - 1); updateSlider(); });
+nextBtn.addEventListener('touchend', (e) => { e.preventDefault(); index = index + 1; updateSlider(); });
 window.addEventListener('resize', updateReviews);
 
 function updateReviews() {
@@ -117,14 +118,13 @@ renderReviews();
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
 
-menuToggle.addEventListener('click', (e) => {
-  e.stopPropagation(); // Предотвращаем конфликт с глобальным обработчиком
+function toggleMenu(e) {
+  e.preventDefault(); // Предотвращаем любые побочные эффекты
   navLinks.classList.toggle('active');
-});
-menuToggle.addEventListener('touchend', (e) => {
-  e.stopPropagation(); // То же для тач-событий
-  navLinks.classList.toggle('active');
-});
+}
+
+menuToggle.addEventListener('click', toggleMenu);
+menuToggle.addEventListener('touchstart', toggleMenu); // Заменил touchend на touchstart для быстрого отклика
 
 // Закрытие меню при клике на ссылку или вне меню
 document.addEventListener('click', (e) => {
@@ -173,11 +173,10 @@ if (backToTop) {
 // Дополнительный фикс для всех кнопок и ссылок на мобильных
 document.querySelectorAll('a.btn, .btn-primary, button[type="submit"]').forEach(element => {
   element.addEventListener('touchend', (e) => {
-    e.stopPropagation(); // Предотвращаем конфликт с другими обработчиками
+    e.preventDefault(); // Предотвращаем дублирование
     if (element.tagName === 'A') {
       const href = element.getAttribute('href');
       if (href.startsWith('#')) {
-        e.preventDefault();
         const targetId = href.substring(1);
         const targetElement = document.getElementById(targetId);
         if (targetElement) {

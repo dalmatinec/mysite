@@ -41,7 +41,7 @@ starsCtl.forEach(btn => {
     starsCtl.forEach(b => b.classList.toggle('active', Number(b.dataset.star) <= currentRating));
   });
   btn.addEventListener('touchend', (e) => {
-    e.preventDefault(); // Предотвращаем дублирование событий
+    e.preventDefault();
     currentRating = Number(btn.dataset.star);
     starsCtl.forEach(b => b.classList.toggle('active', Number(b.dataset.star) <= currentRating));
   });
@@ -119,12 +119,14 @@ const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
 
 function toggleMenu(e) {
-  e.preventDefault(); // Предотвращаем любые побочные эффекты
+  e.preventDefault(); // Блокируем любые побочные эффекты браузера
   navLinks.classList.toggle('active');
 }
 
+// Удаляем старые обработчики и добавляем новые с touchstart и touchend
+menuToggle.addEventListener('touchstart', toggleMenu, { passive: false });
+menuToggle.addEventListener('touchend', toggleMenu, { passive: false });
 menuToggle.addEventListener('click', toggleMenu);
-menuToggle.addEventListener('touchstart', toggleMenu); // Заменил touchend на touchstart для быстрого отклика
 
 // Закрытие меню при клике на ссылку или вне меню
 document.addEventListener('click', (e) => {
@@ -173,7 +175,7 @@ if (backToTop) {
 // Дополнительный фикс для всех кнопок и ссылок на мобильных
 document.querySelectorAll('a.btn, .btn-primary, button[type="submit"]').forEach(element => {
   element.addEventListener('touchend', (e) => {
-    e.preventDefault(); // Предотвращаем дублирование
+    e.preventDefault();
     if (element.tagName === 'A') {
       const href = element.getAttribute('href');
       if (href.startsWith('#')) {
